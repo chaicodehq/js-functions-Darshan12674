@@ -45,17 +45,72 @@
  *   // => [{ rating: 5 }, { rating: 3 }]
  */
 export function createFilter(field, operator, value) {
-  // Your code here
+   return function (dhabaObj){
+
+    const actualValue = dhabaObj[field]
+
+    switch(operator){
+     case ">":
+     return actualValue > value;
+     case "<":
+       return actualValue < value;
+     case ">=" :
+       return actualValue >= value;
+     case "<=" :
+       return actualValue <= value;
+     case  "===":
+       return actualValue === value 
+     default:
+       return false
+    }
+   }
 }
 
 export function createSorter(field, order = "asc") {
-  // Your code here
+  return function (objA, objB){
+    const valA = objA[field]
+    const valB = objB[field]
+
+ if(order === "asc"){
+    if(valA < valB) {
+      return -1
+    }else if(valA > valB){
+      return 1
+    }else if(valA === valB){
+      return 0
+    }
+    }else if(order === "desc"){
+      if(valA < valB) {
+      return 1
+    }else if(valA > valB){
+      return -1
+    }else if(valA === valB){
+      return 0
+    }
+    }
+
+  }
 }
 
 export function createMapper(fields) {
-  // Your code here
+  return function(obj){
+    const newObj = {}
+
+    for(const key of fields){
+      newObj[key] = obj[key]
+    }
+    return newObj
+  }
 }
 
 export function applyOperations(data, ...operations) {
-  // Your code here
+  if(!Array.isArray(data)) return []
+  let originalData = data
+
+  for(const fn of operations){
+    originalData = fn(originalData)
+  }
+ 
+  return originalData
+
 }

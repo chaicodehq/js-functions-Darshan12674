@@ -53,21 +53,74 @@
  *   generatePattern(3)        // => ["*", "**", "***", "**", "*"]
  */
 export function repeatChar(char, n) {
-  // Your code here
+  if(typeof char !== "string" || char.trim() === "") return ""
+  if(n <= 0 )return ""
+
+  return char + repeatChar(char, n-1)
 }
 
 export function sumNestedArray(arr) {
-  // Your code here
+  if(!Array.isArray(arr))return 0
+  if(arr.length === 0) return 0
+  
+  const firstItem = arr[0]
+  const restOfArray = arr.slice(1)
+
+  let firstValue = 0;
+
+  if(Array.isArray(firstItem)){
+    firstValue = sumNestedArray(firstItem)
+  }else if(typeof firstItem === "number"){
+    firstValue = firstItem
+  }
+  
+  return firstValue + sumNestedArray(restOfArray)
 }
 
 export function flattenArray(arr) {
-  // Your code here
+  if(!Array.isArray(arr) || arr.length === 0) return []
+
+  const firstItem = arr[0]
+  const restOfArray = arr.slice(1)
+
+  if(Array.isArray(firstItem)){
+    return flattenArray(firstItem).concat(flattenArray(restOfArray))
+  }else{
+    return[firstItem].concat(flattenArray(restOfArray))
+  }  
 }
 
 export function isPalindrome(str) {
-  // Your code here
+  if(typeof str !== "string") return false
+    
+  if(str.length <= 1) return true
+  
+   str = str.toLowerCase()
+  
+  const firstChar = str[0]
+  const lastChar = str[str.length - 1];
+  
+  if(firstChar !== lastChar){
+    return false
+  }else if(firstChar === lastChar){
+    return isPalindrome(str.slice(1, -1))
+  }
 }
 
+
+
 export function generatePattern(n) {
-  // Your code here
+  if(typeof n !== "number" || n <= 0 || !Number.isInteger(n)) return []
+
+  if(n === 1 ) return ["*"]
+
+  const middleStars = repeatChar("*", n)
+
+  const prevPatern = generatePattern(n - 1)
+  const leftSide = prevPatern.slice(0, n- 1)
+  const rightSide = prevPatern.slice(n - 2)
+
+  return [...leftSide, middleStars, ...rightSide]
+  
+  
 }

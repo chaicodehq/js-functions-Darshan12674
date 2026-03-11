@@ -49,5 +49,87 @@
  *   // => { name: "Ram", area: "Dadar", total: 2, completed: 1, pending: 1, successRate: "50.00%" }
  */
 export function createDabbawala(name, area) {
-  // Your code here
+
+  let currentId = 1
+  let arrayOfDelivereis = []
+
+  const addDelivery = (from, to) => {
+
+    if(from === null || from === undefined || from.trim() === "") return -1
+    if(to === null || to === undefined|| to.trim() === "") return -1
+
+    const eachDelivery = {
+      id: currentId,
+      from,
+      to,
+      status: "pending"
+    }
+   arrayOfDelivereis.push(eachDelivery)
+
+    currentId +=1
+   return eachDelivery.id
+  }
+
+  const completeDelivery = (id) => {
+   
+    const foundDabba = arrayOfDelivereis.find((dabba) => dabba.id === id)
+
+    if(foundDabba === undefined || foundDabba === null ) {
+      return false
+    }
+
+    if(foundDabba.status === "completed") return false
+
+    foundDabba.status = "completed"
+    
+  return true
+    
+  }
+
+  const getActiveDeliveries = () =>{
+    const pendingDabbas = arrayOfDelivereis.filter((dabba) => dabba.status === "pending")
+
+    return pendingDabbas.map((dabba) =>{ 
+      return {...dabba}
+    })
+  }
+
+  const getStats = () => {
+   const total = arrayOfDelivereis.length
+   const completed = arrayOfDelivereis.filter((d) => d.status === "completed").length
+   const pending = arrayOfDelivereis.filter((d) => d.status === "pending").length
+
+   let successRateToString  = "0.00%";
+   if(total > 0){
+     const successRate = (completed / total) * 100
+     successRateToString = `${successRate.toFixed(2)}%`
+
+   }
+
+   return {
+    name: name, 
+    area: area,
+    total: total,
+    completed: completed,
+    pending: pending,
+    successRate: successRateToString
+   }
+
+  }
+
+  const reset = () =>{
+
+    arrayOfDelivereis = []
+    currentId = 1
+
+    return true
+  }
+
+  return {
+    addDelivery: addDelivery,
+    completeDelivery: completeDelivery,
+    getActiveDeliveries: getActiveDeliveries,
+    getStats: getStats,
+    reset: reset
+  }
 }
